@@ -18,9 +18,9 @@ type Ranking struct{
 
 
 type Movie struct{
-	ID bson.ObjectID `"bson:_id" "json:_id"`
-	ImdbID string ``
-	Title string
+	ID bson.ObjectID 
+	ImdbID string 
+	Title string 
 	PosterPath string
 	YoutubeID string
 	Genre []Genre
