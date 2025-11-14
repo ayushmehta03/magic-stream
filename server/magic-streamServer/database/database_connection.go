@@ -41,4 +41,32 @@ func DBConnect() *mongo.Client{
 }
 
 
+ var Client *mongo.Client=DBConnect()
+
+
+
+
+func OpenCollection(collectionName string) *mongo.Collection{
+
+	err:=godotenv.Load(".env")
+
+	if err!=nil{
+		log.Println("warning: unable to find .env file")
+	}
+
+
+	databaseName:=os.Getenv("DATABASE_NAME")
+
+	fmt.Println("DATABASE_NAME: ",databaseName)
+
+	collection:=Client.Database(databaseName).Collection(collectionName)
+
+	if collection==nil{
+		return nil
+	}
+
+	return collection
+}
+
+
 
