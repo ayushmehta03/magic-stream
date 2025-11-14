@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-
+	controllers "github.com/ayushmehta03/magic-stream/server/magic-streamServer/controllers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +18,7 @@ func main(){
 		c.String(200,"hello, magic-stream-movies")
 	})
 
+	router.GET("/movies",controllers.GetMovies())
 	if err:=router.Run(":8080");err!=nil{
 		fmt.Println("failed to start server",err)
 	}
