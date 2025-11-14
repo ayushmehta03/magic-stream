@@ -18,13 +18,13 @@ type Ranking struct{
 
 
 type Movie struct{
-	ID bson.ObjectID 
-	ImdbID string 
-	Title string 
-	PosterPath string
-	YoutubeID string
-	Genre []Genre
-	AdminReview string
-	Ranking Ranking
+	ID bson.ObjectID `bson:"_id" json:"_id"`
+	ImdbID string  `bson:"imdb_id" json:"imdb_id"`
+	Title string  `bson:"title" json:"title"`
+	PosterPath string `bson:"poster_path" json:"poster_path"`
+	YoutubeID string  `bson:"youtube_id" json:"youtube_id"`
+	Genre []Genre `bson: "genre" json:"genre"`
+	AdminReview string `bson:"admin_review" json:"admin_review"`
+	Ranking Ranking  `bson:"ranking" json:"ranking"`
 
 }
