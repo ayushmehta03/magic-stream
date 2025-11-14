@@ -15,6 +15,9 @@ import (
 var movieCollection *mongo.Collection=database.OpenCollection("movies")
 
 
+// get all the movies present inside the database
+
+
 func GetMovies() gin.HandlerFunc{
 	return func (c *gin.Context){
 		ctx,cancel:=context.WithTimeout(context.Background(),100*time.Second)
@@ -41,6 +44,7 @@ func GetMovies() gin.HandlerFunc{
 	}
 }
 
+// get a single movie details with params as imdb id
 
 func GetMovie() gin.HandlerFunc {
 	return func (c *gin.Context){

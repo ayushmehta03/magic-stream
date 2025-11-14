@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-
+// connecting the db 
 func DBConnect() *mongo.Client{
 	err:=godotenv.Load(".env")
 	if err!=nil{
@@ -44,7 +44,7 @@ func DBConnect() *mongo.Client{
  var Client *mongo.Client=DBConnect()
 
 
-
+	// function for running all the queries 
 
 func OpenCollection(collectionName string) *mongo.Collection{
 
