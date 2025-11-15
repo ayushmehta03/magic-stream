@@ -14,13 +14,13 @@ type User struct{
 	FirstName string `bson:"frist_name" json:"first_name" validate:"required,min=3,max=100"`
 	LastName string `bson:"last_name" json:"last_name" validate:"required,min=3,max=100"`
 	Email string   `bson:"email" json:"email" validate:"required" `
-	Password string  `bson:"password" json:"password" validate:"required, min=6"`
-	Role string   `bson:"role" json:"role" validate:"one of=ADMIN USER"`
+	Password string  `bson:"password" json:"password" validate:"required,min=6"`
+	Role string   `bson:"role" json:"role" validate:"oneof=ADMIN USER"`
 	CreatedAt time.Time `bson:"created_at" json:"created_at"`
 	UpdatedAt time.Time  `bson:"updated_at" json:"updated_at"`
 	Token string `bson:"token" json:"token"`
 	RefreshToken string `bson:"refresh_token" json:"refresh_token"`
-	FavouriteGenre[] Genre `bson:"favourite_genre" json:"favourite_genre" validate:"required,dive"`
+	FavouriteGenres []Genre `bson:"favourite_genres" json:"favourite_genres" validate:"required,dive"`
 
 
 }

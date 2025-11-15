@@ -68,6 +68,7 @@ func RegisterUser() gin.HandlerFunc{
 
 
 		var ctx,cancel=context.WithTimeout(context.Background(),100*time.Second)
+				defer cancel()
 
 
 		count,err:=userCollection.CountDocuments(ctx,bson.M{"email":user.Email})
@@ -89,7 +90,6 @@ func RegisterUser() gin.HandlerFunc{
 		user.Password=hashedPassword
 
 
-		defer cancel()
 
 		result,err:=userCollection.InsertOne(ctx,user)
 
