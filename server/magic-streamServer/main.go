@@ -24,6 +24,8 @@ func main(){
 
 	router.POST("/addmovie",controllers.AddMovie())
 
+		router.POST("/register",controllers.AddMovie())
+
 
 	if err:=router.Run(":8080");err!=nil{
 		fmt.Println("failed to start server",err)
