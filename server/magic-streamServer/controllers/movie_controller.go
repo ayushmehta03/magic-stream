@@ -10,10 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"github.com/go-playground/validator/v10"
 )
 
 var movieCollection *mongo.Collection=database.OpenCollection("movies")
 
+
+// create validator object
+var validate =validator.New()
 
 // get all the movies present inside the database
 
@@ -72,6 +76,39 @@ func GetMovie() gin.HandlerFunc {
 
 		c.JSON(http.StatusOK,movie)
 
+
+
+
+
+
+	}
+}
+
+
+
+// add movie to the database
+
+func AddMovie() gin.HandlerFunc{
+	return func(c *gin.Context){
+	
+		ctx,cancel:=context.WithTimeout(context.Background(),100*time.Second)
+
+		defer cancel();
+
+		var movie models.Movie
+
+		if err:=c.ShouldBindJSON(&movie);err!=nil{
+			c.JSON(http.StatusBadRequest,gin.H{"error":"Inavlid input"})
+			return
+		}
+
+		if err:=validate.Struct(movie);err!=nil{
+			c.JSON(http.StatusBadRequest,gin.H{"error":"Validation failed","details":err.Error()})
+			return 
+		}
+
+
+		
 
 
 
