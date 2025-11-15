@@ -108,7 +108,21 @@ func AddMovie() gin.HandlerFunc{
 		}
 
 
-		
+		result,err:=movieCollection.InsertOne(ctx,movie);
+
+		if err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"Failed to add movie"})
+			return 
+		}
+
+
+
+		c.JSON(http.StatusCreated,result)
+
+
+
+
+
 
 
 
