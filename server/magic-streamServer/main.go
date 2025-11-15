@@ -24,7 +24,7 @@ func main(){
 
 	router.POST("/addmovie",controllers.AddMovie())
 
-		router.POST("/register",controllers.AddMovie())
+	router.POST("/register",controllers.RegisterUser())
 
 
 	if err:=router.Run(":8080");err!=nil{
