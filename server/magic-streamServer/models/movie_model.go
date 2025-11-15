@@ -21,7 +21,7 @@ type Ranking struct{
 
 
 type Movie struct{
-	ID bson.ObjectID `bson:"_id" json:"_id"`
+	ID bson.ObjectID `bson:"_id,omitempty" json:"_id omitempty"`
 	ImdbID string  `bson:"imdb_id" json:"imdb_id" validate:"required"`
 	Title string  `bson:"title" json:"title" validate:"required,min=2,max=500"`
 	PosterPath string `bson:"poster_path" json:"poster_path" validate:"required,url"`
