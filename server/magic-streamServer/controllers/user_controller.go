@@ -7,13 +7,12 @@ import (
 
 	database "github.com/ayushmehta03/magic-stream/server/magic-streamServer/database"
 	models "github.com/ayushmehta03/magic-stream/server/magic-streamServer/models"
+	"github.com/ayushmehta03/magic-stream/server/magic-streamServer/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"golang.org/x/crypto/bcrypt"
-		"go.mongodb.org/mongo-driver/v2/bson"
-
-
 )
 
 var userCollection *mongo.Collection= database.OpenCollection("users")
@@ -154,9 +153,32 @@ func LogInUser() gin.HandlerFunc{
 			return
 		}
 
-		
 
+		token,refreshToken,err:=utils.GenerateAllTokens(foundUser.Email,foundUser.FirstName,foundUser.LastName,foundUser.Role,foundUser.UserId)
 
+		if err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"Failed to generate tokens"})
+			return
+		}
+
+		err=utils.UpdateAllTokens(foundUser.UserId,token,refreshToken)
+
+		if err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"Failed to update tokens"})
+			return
+		}
+
+		c.JSON(http.StatusOK,models.UserResponse{
+			UserId:foundUser.UserId,
+			FirstName: foundUser.FirstName,
+			LastName: foundUser.LastName,
+			Email: foundUser.Email,
+			Role:foundUser.Role,
+			FavouriteGenres: foundUser.FavouriteGenres,
+			Token: token,
+			RefreshToken: refreshToken,
+
+		})
 
 
 
