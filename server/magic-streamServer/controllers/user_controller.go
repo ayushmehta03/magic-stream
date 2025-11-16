@@ -120,3 +120,11 @@ func RegisterUser() gin.HandlerFunc{
 
 	}
 }
+
+
+
+func LogInUser() gin.HandlerFunc{
+	return func(c *gin.Context){
+		
+	}
+}
