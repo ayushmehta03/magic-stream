@@ -62,15 +62,18 @@ func GenerateAllTokens(email,firstName,lastName,role,userId string)(string,strin
 		},
 	}
 
-	refreshToken:=jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
+	refreshToken:=jwt.NewWithClaims(jwt.SigningMethodHS256,refreshClaims)
 
-	refreshSignedToken,err:=token.SignedString([]byte(SECRET_KEY))
+	refreshSignedToken,err:=refreshToken.SignedString([]byte(SECRET_KEY))
 
 	if err!=nil{
 		return "","",err
 	}
 
-	
+
+	return signedToken,refreshSignedToken,nil
+
+
 
 
 
