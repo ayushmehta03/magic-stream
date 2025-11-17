@@ -26,6 +26,7 @@ func main(){
 
 	router.POST("/register",controllers.RegisterUser())
 
+	router.POST("/login",controllers.LogInUser())
 
 	if err:=router.Run(":8080");err!=nil{
 		fmt.Println("failed to start server",err)

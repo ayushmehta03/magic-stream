@@ -2,10 +2,12 @@ package utils
 
 import (
 	"context"
+	"errors"
 	"os"
 	"time"
 
 	"github.com/ayushmehta03/magic-stream/server/magic-streamServer/database"
+	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -60,14 +62,14 @@ func GenerateAllTokens(email,firstName,lastName,role,userId string)(string,strin
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer: "magic-stream",
 			IssuedAt: jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24*time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24*7*time.Hour)),
 
 		},
 	}
 
 	refreshToken:=jwt.NewWithClaims(jwt.SigningMethodHS256,refreshClaims)
 
-	refreshSignedToken,err:=refreshToken.SignedString([]byte(SECRET_KEY))
+	refreshSignedToken,err:=refreshToken.SignedString([]byte(SECRET_REFRESH_KEY))
 
 	if err!=nil{
 		return "","",err
@@ -107,4 +109,24 @@ func UpdateAllTokens(userId,token,refreshToken string) (err error){
 	}
 
 	return nil
+}
+
+
+func GetAccessToken(c *gin.Context)(string,error){
+
+
+	authHeader:=c.Request.Header.Get("Authorization")
+
+	if authHeader==""{
+		return "",errors.New("Authorization header is required")
+	}
+
+tokenString := authHeader[len("Bearer "):]
+
+
+	if tokenString==""{
+		return "",errors.New("Bearer token is required ")
+	}
+
+	return tokenString,nil
 }
