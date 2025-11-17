@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	controllers "github.com/ayushmehta03/magic-stream/server/magic-streamServer/controllers"
+		"github.com/ayushmehta03/magic-stream/server/magic-streamServer/routes"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,15 +19,10 @@ func main(){
 		c.String(200,"hello, magic-stream-movies")
 	})
 
-	router.GET("/movies",controllers.GetMovies())
+	routes.SetupUnProtectedRoutes(router)
+	routes.SetupProtectedRoutes(router)
 
-		router.GET("/movie/:imdb_id",controllers.GetMovie())
-
-	router.POST("/addmovie",controllers.AddMovie())
-
-	router.POST("/register",controllers.RegisterUser())
-
-	router.POST("/login",controllers.LogInUser())
+	
 
 	if err:=router.Run(":8080");err!=nil{
 		fmt.Println("failed to start server",err)
