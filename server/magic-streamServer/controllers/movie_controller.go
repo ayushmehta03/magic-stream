@@ -231,6 +231,17 @@ func GetReviewRanking(admin_review string)(string,int,error){
 		return "",0,err
 	}
 
+	rankValue:=0
+
+	for _, ranking :=range rankings{
+		if ranking.RankingName==response{
+			rankValue=ranking.RankingValue
+			break
+		}
+	}
+
+	return  response,rankValue,nil
+
 }
 
 
