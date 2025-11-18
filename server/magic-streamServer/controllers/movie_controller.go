@@ -14,6 +14,7 @@ import (
 )
 
 var movieCollection *mongo.Collection=database.OpenCollection("movies")
+var rankingCollection *mongo.Collection=database.OpenCollection("rankings")
 
 
 // create validator object
@@ -158,8 +159,49 @@ func AdminReviewUpdate() gin.HandlerFunc{
 
 		if err:=c.ShouldBind(&req);err!=nil{
 			c.JSON(http.StatusBadRequest,gin.H{"error":"Invalid request body"})
+			return 
 		}
 
 
+
+
+
 	}
+}
+
+
+func GetReviewRanking(admin_review string)(string,int,error){
+
+
+
+
+
+
+
+}
+
+
+func getRankings()([]models.Ranking,error){
+
+	var rankings[] models.Ranking
+
+
+	var ctx,cancel=context.WithTimeout(context.Background(),100*time.Second)
+	
+	defer cancel()
+	cursor,err:=rankingCollection.Find(ctx,bson.M{})
+
+	if err!=nil{
+		return nil,err
+	}
+
+	defer cursor.Close(ctx)
+
+
+	if err:=cursor.All(ctx,&rankings);err!=nil{
+		return nil,err
+	}
+
+	return rankings,nil
+
 }
