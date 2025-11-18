@@ -2,15 +2,18 @@ package controllers
 
 import (
 	"context"
+	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	database "github.com/ayushmehta03/magic-stream/server/magic-streamServer/database"
 	models "github.com/ayushmehta03/magic-stream/server/magic-streamServer/models"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
-	"github.com/go-playground/validator/v10"
 )
 
 var movieCollection *mongo.Collection=database.OpenCollection("movies")
@@ -172,16 +175,35 @@ func AdminReviewUpdate() gin.HandlerFunc{
 
 func GetReviewRanking(admin_review string)(string,int,error){
 
+	rankings,err:=GetRankings()
+	if err!=nil{
+		return "",0,err
+	}
+
+
+	sentimentDelimited:="";
+
+
+	for _,ranking:=range rankings{
+		if ranking.RankingValue!=999{
+			sentimentDelimited=sentimentDelimited+ranking.RankingName +","
+		}
+	}
+
+	sentimentDelimited=strings.Trim(sentimentDelimited,",")
 
 
 
+	err=godotenv.Load(".env")
 
-
+	if err!=nil{
+		log.Println("Warning: .env file not found")
+	}
 
 }
 
 
-func getRankings()([]models.Ranking,error){
+func GetRankings()([]models.Ranking,error){
 
 	var rankings[] models.Ranking
 
