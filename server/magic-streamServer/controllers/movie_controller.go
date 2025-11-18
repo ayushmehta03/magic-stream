@@ -169,6 +169,48 @@ func AdminReviewUpdate() gin.HandlerFunc{
 		}
 
 
+		sentiment,rankVal,err:=GetReviewRanking(req.AdminReview)
+
+
+		if err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"error getting the admin review"})
+		}
+
+
+		filter:=bson.M{"imdb_id":movieId}
+
+		update:=bson.M{
+			"$set":bson.M{
+				"admin_review":req.AdminReview,
+				"ranking":bson.M{
+					"ranking_value":rankVal,
+					"ranking_name":sentiment,
+				},
+			},
+		}
+
+
+		var ctx,cancel=context.WithTimeout(context.Background(),100*time.Second)
+		defer cancel()
+
+		result,err:=movieCollection.UpdateOne(ctx,filter,update)
+
+		if err!=nil{
+			c.JSON(http.StatusInternalServerError,gin.H{"error":"Error updating movie"})
+			return
+		}
+
+		if result.MatchedCount==0{
+			c.JSON(http.StatusNotFound,gin.H{"error":"Movie not found"})
+			return 
+		}
+
+		resp.RankingName=sentiment
+		resp.AdminReview=req.AdminReview
+
+		c.JSON(http.StatusOK,resp)
+
+		
 
 
 
