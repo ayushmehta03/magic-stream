@@ -130,3 +130,36 @@ func AddMovie() gin.HandlerFunc{
 
 	}
 }
+
+
+// admin review langchain go
+
+
+func AdminReviewUpdate() gin.HandlerFunc{
+	return func(c *gin.Context){
+		movieId:=c.Param("imdb_id")
+
+
+		if movieId==""{
+			c.JSON(http.StatusBadRequest,gin.H{"error":"Movie id required"})
+			return
+		}
+
+		var req struct{
+			AdminReview string `json:"admin_review"`
+
+		}
+
+		var resp struct{
+			RankingName string `json:"ranking_name"`
+			AdminReview string `json:"admin_review"`
+		}
+
+
+		if err:=c.ShouldBind(&req);err!=nil{
+			c.JSON(http.StatusBadRequest,gin.H{"error":"Invalid request body"})
+		}
+
+
+	}
+}
