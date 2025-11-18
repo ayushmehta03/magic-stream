@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -12,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	"github.com/tmc/langchaingo/llms/openai"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
@@ -198,6 +201,34 @@ func GetReviewRanking(admin_review string)(string,int,error){
 
 	if err!=nil{
 		log.Println("Warning: .env file not found")
+	}
+
+
+	OpenAiApiKey:=os.Getenv("OPENAI_API_KEY")
+
+
+	if OpenAiApiKey==""{
+		return "",0,errors.New("could not read OPENAI_API_KEY")
+	}
+
+
+
+	llm,err:=openai.New(openai.WithToken(OpenAiApiKey))
+
+	if err!=nil{
+		return "",0,err;
+	}
+
+
+
+	base_prompt_temp:=os.Getenv("BASE_PROMPT_TEMPLATE")
+
+	base_prompt:=strings.Replace(base_prompt_temp,"{rankings}",sentimentDelimited,1)
+
+	response,err:=llm.Call(context.Background(),base_prompt+admin_review)
+
+	if err!=nil{
+		return "",0,err
 	}
 
 }
