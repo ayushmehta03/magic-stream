@@ -11,6 +11,7 @@ import (
 
 	database "github.com/ayushmehta03/magic-stream/server/magic-streamServer/database"
 	models "github.com/ayushmehta03/magic-stream/server/magic-streamServer/models"
+	"github.com/ayushmehta03/magic-stream/server/magic-streamServer/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
@@ -315,7 +316,17 @@ func GetRankings()([]models.Ranking,error){
 func GetRecommendedMovies() gin.HandlerFunc{
 	return func(c *gin.Context){
 
+	userId,err:=utils.GetUserIdFromContext(c)
+
+	if err!=nil{
+ 	c.JSON(http.StatusBadRequest,gin.H{"error":"user id not found in context"})
+		return 
+	}
+
 	
+
+
+
 
 	}
 }
