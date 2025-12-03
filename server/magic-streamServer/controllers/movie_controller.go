@@ -18,6 +18,7 @@ import (
 	"github.com/tmc/langchaingo/llms/openai"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 var movieCollection *mongo.Collection=database.OpenCollection("movies")
@@ -323,10 +324,51 @@ func GetRecommendedMovies() gin.HandlerFunc{
 		return 
 	}
 
-	
+
 
 
 
 
 	}
+}
+
+
+
+
+func GetUsersFavGenres(userId string)([]string,error){
+	var ctx,cancel=context.WithTimeout(context.Background(),100*time.Second)
+	defer cancel()
+
+	filter:=bson.M{"user_id":userId}
+
+	projection:=bson.M{
+		"favourite_genres.genre_name":1,
+		"_id":						0,	
+	}
+
+	opts:=options.FindOne().SetProjection(projection)
+
+	var result bson.M
+
+
+	err:=userCollection.FindOne(ctx,filter,opts).Decode(&result)
+
+
+	if err!=nil{
+		if err==mongo.ErrNoDocuments{
+			return []string{},nil
+		}
+	}
+
+	favGenresArray,ok:=result["facourite_genres"].(bson.A)
+
+	if !ok{
+		return []string{},errors.New("unable to retrive favourite genres for user")
+
+	}
+
+	var genreName []string
+	
+
+
 }
