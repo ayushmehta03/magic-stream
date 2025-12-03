@@ -311,3 +311,11 @@ func GetRankings()([]models.Ranking,error){
 	return rankings,nil
 
 }
+
+func GetRecommendedMovies() gin.HandlerFunc{
+	return func(c *gin.Context){
+
+	
+
+	}
+}
