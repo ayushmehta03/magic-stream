@@ -332,7 +332,7 @@ func GetRecommendedMovies() gin.HandlerFunc{
 	}
 }
 
-
+// get the user favourite genres on the basis of user id
 
 
 func GetUsersFavGenres(userId string)([]string,error){
