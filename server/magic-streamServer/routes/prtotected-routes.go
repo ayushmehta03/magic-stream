@@ -19,6 +19,7 @@ func SetupProtectedRoutes(router *gin.Engine){
 
 	router.POST("/addmovie",controllers.AddMovie())
 
+	router.GET("/recommendedmovies",controllers.GetRecommendedMovies())
 }
 
 

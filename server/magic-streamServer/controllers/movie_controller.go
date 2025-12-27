@@ -16,7 +16,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/tdewolff/parse/v2/strconv"
 	"github.com/tmc/langchaingo/llms/openai"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -353,10 +352,31 @@ func GetRecommendedMovies() gin.HandlerFunc{
 
 	findOptions.SetSort(bson.D{{Key: "ranking.ranking_value",Value: 1}})
 	
+	findOptions.SetLimit(recommendedMovieLimitVal)
 
 	filter:=bson.M{"genre.genre_name":bson.M{"$in":favourite_genres}}
 
+	var ctx,cancel=context.WithTimeout(context.Background(),100*time.Second)
+	defer cancel()
+
+	cursor,err:=movieCollection.Find(ctx,filter,findOptions)
+
+	if err!=nil{
+		c.JSON(http.StatusInternalServerError,gin.H{"error":"Error fetching recommended movies"})
+		return 
 	}
+	defer cursor.Close(ctx)
+
+	var recommendedMovies []models.Movie
+
+	if err:=cursor.All(ctx,&recommendedMovies);err!=nil{
+		c.JSON(http.StatusInternalServerError,gin.H{"error":err.Error()})
+		return 
+	}
+
+	c.JSON(http.StatusOK,recommendedMovies)
+	}
+
 }
 
 // get the user favourite genres on the basis of user id
