@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	"github.com/tdewolff/parse/v2/strconv"
 	"github.com/tmc/langchaingo/llms/openai"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
@@ -325,9 +327,34 @@ func GetRecommendedMovies() gin.HandlerFunc{
 	}
 
 
+	favourite_genres,err:=GetUsersFavGenres(userId)
 
+	if err!=nil{
+		c.JSON(http.StatusInternalServerError,gin.H{"error":err.Error()})
+		return
+	}
 
+	err=godotenv.Load(".env")
 
+	if err!=nil{
+		log.Println("Warning: .env file not found ")
+	}
+
+	var recommendedMovieLimitVal int64=5
+
+	recommendedMovieLimitStr:=os.Getenv("RECOMMENDED_MOVIE_LIMIT")
+
+	if recommendedMovieLimitStr!=""{
+		recommendedMovieLimitVal,_=strconv.ParseInt(recommendedMovieLimitStr,10,64)
+
+	}
+
+	findOptions:=options.Find()
+
+	findOptions.SetSort(bson.D{{Key: "ranking.ranking_value",Value: 1}})
+	
+
+	filter:=bson.M{"genre.genre_name":bson.M{"$in":favourite_genres}}
 
 	}
 }
@@ -367,8 +394,24 @@ func GetUsersFavGenres(userId string)([]string,error){
 
 	}
 
-	var genreName []string
+	var genreNames []string
 	
+	for _, item := range favGenresArray {
 
+    genreDoc, ok := item.(bson.D)
+    if !ok {
+        continue
+    }
+
+    for _, field := range genreDoc {
+        if field.Key == "genre_name" {
+            if name, ok := field.Value.(string); ok {
+                genreNames = append(genreNames, name)
+            }
+        }
+    }
+}
+
+	return genreNames,nil
 
 }
