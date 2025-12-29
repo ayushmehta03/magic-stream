@@ -1,1 +1,1 @@
-# magic-video stream
+video-stream
