@@ -18,6 +18,10 @@ router.GET("/movies",controllers.GetMovies(client))
 	router.POST("/login",controllers.LogInUser(client))
 
 	router.POST("logout",controllers.LogoutHandler(client))
+
+	router.GET("/genres",controllers.GetGenres(client))
+
+	router.POST("refresh",controllers.RefreshTokenHandler(client))
 }
 
 
