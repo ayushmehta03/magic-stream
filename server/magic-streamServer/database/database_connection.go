@@ -11,7 +11,7 @@ import (
 )
 
 // connecting the db 
-func DBConnect() *mongo.Client{
+func Connect() *mongo.Client{
 	err:=godotenv.Load(".env")
 	if err!=nil{
 		log.Println("warning: unable to find .env file")
@@ -41,12 +41,11 @@ func DBConnect() *mongo.Client{
 }
 
 
- var Client *mongo.Client=DBConnect()
 
 
 	// function for running all the queries 
 
-func OpenCollection(collectionName string) *mongo.Collection{
+func OpenCollection(collectionName string, Client *mongo.Client) *mongo.Collection{
 
 	err:=godotenv.Load(".env")
 

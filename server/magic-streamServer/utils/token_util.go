@@ -22,7 +22,6 @@ type SignedDetails struct{
 	jwt.RegisteredClaims
 }
 
-var userCollection *mongo.Collection=database.OpenCollection("users")
 
 
 var SECRET_KEY string=os.Getenv("SECRET_KEY")
@@ -86,7 +85,7 @@ func GenerateAllTokens(email,firstName,lastName,role,userId string)(string,strin
 
 
 
-func UpdateAllTokens(userId,token,refreshToken string) (err error){
+func UpdateAllTokens(userId,token,refreshToken string,client *mongo.Client) (err error){
 	var ctx,cancel=context.WithTimeout(context.Background(),100*time.Second)
 	defer cancel()
 
@@ -100,6 +99,8 @@ func UpdateAllTokens(userId,token,refreshToken string) (err error){
 			"update_at":updatedAt,
 		},
 	}
+	var userCollection *mongo.Collection=database.OpenCollection("users",client)
+
 
 
 	_,err=userCollection.UpdateOne(ctx,bson.M{"user_id":userId},updateData)

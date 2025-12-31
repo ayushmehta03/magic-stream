@@ -3,8 +3,12 @@ package main
 import (
 	"fmt"
 		"github.com/ayushmehta03/magic-stream/server/magic-streamServer/routes"
+		"go.mongodb.org/mongo-driver/v2/mongo"
+			database "github.com/ayushmehta03/magic-stream/server/magic-streamServer/database"
+
 
 	"github.com/gin-gonic/gin"
+
 )
 
 func main(){
@@ -19,8 +23,11 @@ func main(){
 		c.String(200,"hello, magic-stream-movies")
 	})
 
-	routes.SetupUnProtectedRoutes(router)
-	routes.SetupProtectedRoutes(router)
+	 var client *mongo.Client=database.Connect()
+
+
+	routes.SetupUnProtectedRoutes(router,client)
+	routes.SetupProtectedRoutes(router,client)
 
 	
 
